@@ -1,4 +1,5 @@
 const TEXT = document.getElementById("text");
+const STREAK = document.getElementById("streak");
 const COUNTER = document.getElementById("hits");
 let counter = 0;
 let streak = 0;
@@ -16,24 +17,24 @@ document.addEventListener("click", (e) => {
 
 function play(btn) {
     if (btn.id) {
-        console.log(btn.id);
         if (
-            (TEXT.textContent.toLowerCase().includes("izquierda") ||
+            ((TEXT.textContent.toLowerCase().includes("izquierda") ||
                 TEXT.textContent.toLowerCase().includes("⬅️") ||
                 TEXT.textContent.toLowerCase().includes("👈")) &&
-            btn.id.includes("left")
-        ) {
-            COUNTER.textContent = intToRoman(++counter);
-        } else if (
-            (TEXT.textContent.toLowerCase().includes("derecha") ||
+                btn.id.includes("left")) ||
+            ((TEXT.textContent.toLowerCase().includes("derecha") ||
                 TEXT.textContent.toLowerCase().includes("➡️") ||
                 TEXT.textContent.toLowerCase().includes("👉")) &&
-            btn.id.includes("right")
+                btn.id.includes("right"))
         ) {
             COUNTER.textContent = intToRoman(++counter);
-        }
-        if (counter > streak) {
-            streak = counter;
+        } else {
+            if (counter > streak) {
+                streak = counter;
+                STREAK.textContent = streak + "🔥";
+            }
+            counter = 0;
+            COUNTER.textContent = intToRoman(counter);
         }
     }
     shuffle();
@@ -45,15 +46,14 @@ async function shuffle() {
     const DIRECTION = ["izquierda", "derecha", "⬅️", "➡️", "👈", "👉"];
     let direction = DIRECTION[Math.floor(Math.random() * DIRECTION.length)];
 
-    const TEXTS = DATA.texts.map((text) =>
-        text.replace(/{direction}/g, direction)
-    );
-    TEXT.textContent = TEXTS[Math.floor(Math.random() * TEXTS.length)];
+    TEXT.innerHTML = DATA.texts[
+        Math.floor(Math.random() * DATA.texts.length)
+    ].replace(/{direction}/g, "<b>" + direction + "</b>");
 }
 
 function intToRoman(number) {
     if (number < 1) {
-        return "";
+        return "-";
     }
 
     const VALUES = [
