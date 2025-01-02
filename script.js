@@ -14,8 +14,12 @@ document.addEventListener("click", clickEvent);
 
 function clickEvent(e) {
     let btn = e.target.closest("button");
+    let direction = e.target.closest("b");
+
     if (btn && btn.id) {
         play(btn);
+    } else if (direction && direction.id === "direction") {
+        hint(direction);
     }
 }
 
@@ -38,16 +42,17 @@ function play(btn) {
         correctIcon.style.display = "block";
         defaultIcon.style.display = "none";
     } else {
-        if (counter > streak) {
-            streak = counter;
-            STREAK.textContent = streak + "🔥";
-            localStorage.setItem("streak", streak.toString());
-        }
+        STREAK.textContent = streak + "🔥";
         counter = 0;
         COUNTER.textContent = intToRoman(counter);
 
         wrongIcon.style.display = "block";
         defaultIcon.style.display = "none";
+    }
+
+    if (counter > streak) {
+        streak = counter;
+        localStorage.setItem("streak", streak.toString());
     }
 
     setTimeout(() => {
@@ -59,22 +64,26 @@ function play(btn) {
     }, 800);
 }
 
+function hint(direction) {
+    direction.textContent =
+        direction.textContent === "izquierda"
+            ? "👈"
+            : direction.textContent === "derecha"
+            ? "👉"
+            : direction.textContent;
+    direction.style.fontSize = "1.1rem";
+    direction.style.cursor = "default";
+}
+
 async function shuffle() {
     const RESPONSE = await fetch("./texts.json");
     const DATA = await RESPONSE.json();
-    const DIRECTION = [
-        "izquierda",
-        "derecha",
-        "izquierda",
-        "derecha",
-        "👈",
-        "👉",
-    ];
+    const DIRECTION = ["izquierda", "derecha"];
     let direction = DIRECTION[Math.floor(Math.random() * DIRECTION.length)];
 
     TEXT.innerHTML = DATA.texts[
         Math.floor(Math.random() * DATA.texts.length)
-    ].replace(/{direction}/g, "<b>" + direction + "</b>");
+    ].replace(/{direction}/g, "<b id='direction'>" + direction + "</b>");
 
     document.getElementsByClassName("correct_icons");
 }
