@@ -1,54 +1,82 @@
 const TEXT = document.getElementById("text");
 const STREAK = document.getElementById("streak");
 const COUNTER = document.getElementById("hits");
+let streak = localStorage.getItem("streak")
+    ? parseInt(localStorage.getItem("streak"))
+    : 0;
+STREAK.textContent = streak + "🔥";
 let counter = 0;
-let streak = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     shuffle();
 });
+document.addEventListener("click", clickEvent);
 
-document.addEventListener("click", (e) => {
+function clickEvent(e) {
     let btn = e.target.closest("button");
-    if (btn) {
+    if (btn && btn.id) {
         play(btn);
     }
-});
+}
 
 function play(btn) {
-    if (btn.id) {
-        if (
-            ((TEXT.textContent.toLowerCase().includes("izquierda") ||
-                TEXT.textContent.toLowerCase().includes("⬅️") ||
-                TEXT.textContent.toLowerCase().includes("👈")) &&
-                btn.id.includes("left")) ||
-            ((TEXT.textContent.toLowerCase().includes("derecha") ||
-                TEXT.textContent.toLowerCase().includes("➡️") ||
-                TEXT.textContent.toLowerCase().includes("👉")) &&
-                btn.id.includes("right"))
-        ) {
-            COUNTER.textContent = intToRoman(++counter);
-        } else {
-            if (counter > streak) {
-                streak = counter;
-                STREAK.textContent = streak + "🔥";
-            }
-            counter = 0;
-            COUNTER.textContent = intToRoman(counter);
+    let content = TEXT.textContent.toLowerCase();
+    let defaultIcon = document.querySelector("#" + btn.id + " .default_icon");
+    let correctIcon = document.querySelector("#" + btn.id + " .correct_icon");
+    let wrongIcon = document.querySelector("#" + btn.id + " .wrong_icon");
+
+    document.removeEventListener("click", clickEvent);
+
+    if (
+        ((content.includes("izquierda") || content.includes("👈")) &&
+            btn.id.includes("left")) ||
+        ((content.includes("derecha") || content.includes("👉")) &&
+            btn.id.includes("right"))
+    ) {
+        COUNTER.textContent = intToRoman(++counter);
+
+        correctIcon.style.display = "block";
+        defaultIcon.style.display = "none";
+    } else {
+        if (counter > streak) {
+            streak = counter;
+            STREAK.textContent = streak + "🔥";
+            localStorage.setItem("streak", streak.toString());
         }
+        counter = 0;
+        COUNTER.textContent = intToRoman(counter);
+
+        wrongIcon.style.display = "block";
+        defaultIcon.style.display = "none";
     }
-    shuffle();
+
+    setTimeout(() => {
+        defaultIcon.style.display = "block";
+        correctIcon.style.display = "none";
+        wrongIcon.style.display = "none";
+        shuffle();
+        document.addEventListener("click", clickEvent);
+    }, 800);
 }
 
 async function shuffle() {
     const RESPONSE = await fetch("./texts.json");
     const DATA = await RESPONSE.json();
-    const DIRECTION = ["izquierda", "derecha", "⬅️", "➡️", "👈", "👉"];
+    const DIRECTION = [
+        "izquierda",
+        "derecha",
+        "izquierda",
+        "derecha",
+        "👈",
+        "👉",
+    ];
     let direction = DIRECTION[Math.floor(Math.random() * DIRECTION.length)];
 
     TEXT.innerHTML = DATA.texts[
         Math.floor(Math.random() * DATA.texts.length)
     ].replace(/{direction}/g, "<b>" + direction + "</b>");
+
+    document.getElementsByClassName("correct_icons");
 }
 
 function intToRoman(number) {
