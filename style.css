@@ -8,7 +8,7 @@ svg {
 }
 
 body {
-    background-color: #fff;
+    background-color: #ffffff;
     margin: 0;
 }
 
@@ -27,29 +27,28 @@ header {
 }
 
 main {
-    max-width: 80%;
-    margin: 4rem auto;
+    margin: 4rem 0;
     display: flex;
-    justify-content: space-around;
-    vertical-align: middle;
-    gap: 4rem;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 button {
     border: none;
     border-radius: 1rem;
     background: #4a4e51;
-    color: #fff;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
         0 4px 6px -2px rgba(0, 0, 0, 0.05);
     padding: 4rem;
     cursor: pointer;
     transition: transform 0.1s ease, box-shadow 0.1s ease;
+
     &:hover {
         transform: translateY(-0.1em);
         box-shadow: 0 12px 17px -3px rgba(0, 0, 0, 0.1),
             0 6px 8px -2px rgba(0, 0, 0, 0.05);
     }
+
     &:active {
         transform: translateY(0);
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
@@ -72,27 +71,21 @@ button {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
         0 4px 6px -2px rgba(0, 0, 0, 0.05);
     min-width: 8rem;
-    width: auto;
     height: 8rem;
     border-radius: 1rem;
-    margin: auto;
+    display: flex;
+    flex-direction: column;
 
     #streak {
-        text-align: right;
-        margin-left: 0.5rem;
-        color: #fff;
+        text-align: left;
+        color: #ffffff;
         font-weight: 600;
-        display: flex;
     }
 
     .hits {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         p {
             margin: 0;
-            color: #fff;
+            color: #ffffff;
             font-size: 2.25rem;
             line-height: 2.5rem;
             font-weight: 700;
@@ -112,5 +105,114 @@ footer {
             text-decoration: none;
             font-weight: bold;
         }
+    }
+}
+
+@media (max-width: 1600px) {
+    svg {
+        width: 24rem;
+    }
+
+    button {
+        padding: 3rem;
+    }
+
+    .counter .hits p {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 1300px) {
+    svg {
+        width: 16rem;
+    }
+
+    header p {
+        font-size: 1.4rem;
+    }
+
+    button {
+        padding: 2rem;
+    }
+
+    .counter .hits p {
+        font-size: 1.75rem;
+    }
+
+    footer p {
+        margin: 0;
+    }
+}
+
+@media (max-width: 900px) {
+    svg {
+        width: 12rem;
+    }
+
+    main {
+        margin: 2rem 0;
+    }
+
+    button {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 700px) {
+    svg {
+        width: 8rem;
+    }
+
+    header p {
+        font-size: 1.2rem;
+    }
+
+    button {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 500px) {
+    svg {
+        width: 8rem;
+    }
+
+    header p {
+        font-size: 1rem;
+    }
+
+    button {
+        padding: 0.5rem;
+    }
+
+    .counter {
+        padding: 0.5rem;
+        min-width: 4rem;
+        height: auto;
+
+        #streak {
+            text-align: center;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .hits {
+            p {
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 400px) {
+    main {
+        flex-direction: column;
+        gap: 2rem;
+    }
+}
+
+@media (orientation: portrait) {
+    body {
+        display: none;
     }
 }
