@@ -212,7 +212,8 @@ footer {
 }
 
 @media (orientation: portrait) {
-    body {
-        display: none;
+    main {
+        flex-direction: column;
+        gap: 2rem;
     }
 }
