@@ -1,10 +1,8 @@
-:root {
-    font-size: 16px;
-}
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap");
 
-svg {
-    width: 32rem;
-    height: auto;
+:root {
+    font-family: "Nunito", "Roboto", "Open Sans";
+    font-size: 16px;
 }
 
 body {
@@ -16,9 +14,11 @@ header {
     padding: 1rem;
     color: #e974ae;
     background-color: #4a4e51;
+
     p {
         font-size: 1.5rem;
         text-align: center;
+
         b {
             vertical-align: top;
             cursor: pointer;
@@ -56,6 +56,11 @@ button {
     }
 }
 
+svg {
+    width: 32rem;
+    height: auto;
+}
+
 .default_icon {
     display: block;
 }
@@ -82,15 +87,13 @@ button {
         font-weight: 600;
     }
 
-    .hits {
-        p {
-            margin: 0;
-            color: #ffffff;
-            font-size: 2.25rem;
-            line-height: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-        }
+    .hits p {
+        margin: 0;
+        color: #ffffff;
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+        font-weight: 700;
+        text-align: center;
     }
 }
 
@@ -98,8 +101,10 @@ footer {
     padding: 1rem;
     color: #e974ae;
     background-color: #4a4e51;
+
     p {
         text-align: center;
+
         a {
             color: #e974ae;
             text-decoration: none;
@@ -109,12 +114,12 @@ footer {
 }
 
 @media (max-width: 1600px) {
-    svg {
-        width: 24rem;
-    }
-
     button {
         padding: 3rem;
+    }
+
+    svg {
+        width: 24rem;
     }
 
     .counter .hits p {
@@ -123,16 +128,16 @@ footer {
 }
 
 @media (max-width: 1300px) {
-    svg {
-        width: 16rem;
-    }
-
     header p {
         font-size: 1.4rem;
     }
 
     button {
         padding: 2rem;
+    }
+
+    svg {
+        width: 16rem;
     }
 
     .counter .hits p {
@@ -145,10 +150,6 @@ footer {
 }
 
 @media (max-width: 900px) {
-    svg {
-        width: 12rem;
-    }
-
     main {
         margin: 2rem 0;
     }
@@ -156,13 +157,13 @@ footer {
     button {
         padding: 1rem;
     }
+
+    svg {
+        width: 12rem;
+    }
 }
 
 @media (max-width: 700px) {
-    svg {
-        width: 8rem;
-    }
-
     header p {
         font-size: 1.2rem;
     }
@@ -170,19 +171,23 @@ footer {
     button {
         padding: 0.5rem;
     }
-}
 
-@media (max-width: 500px) {
     svg {
         width: 8rem;
     }
+}
 
+@media (max-width: 500px) {
     header p {
         font-size: 1rem;
     }
 
     button {
         padding: 0.5rem;
+    }
+
+    svg {
+        width: 8rem;
     }
 
     .counter {
@@ -196,10 +201,8 @@ footer {
             font-size: 0.8rem;
         }
 
-        .hits {
-            p {
-                font-size: 1rem;
-            }
+        .hits p {
+            font-size: 1rem;
         }
     }
 }
