@@ -1,9 +1,6 @@
 # iod
 
-### Idioma del README
-
--   🇪🇸 **Spanish**
--   🇺🇸 [English](./README-en.md)
+Minijuego educativo para enseñar y practicar la diferenciación entre izquierda y derecha.
 
 ![demo](./media/demo.gif)
 
