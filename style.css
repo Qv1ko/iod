@@ -3,29 +3,38 @@
 :root {
     font-family: "Nunito", "Roboto", "Open Sans";
     font-size: 16px;
+    --bg-color: #4a4e51;
+    --primary-color: #e974ae;
+    --white: #ffffff;
+    --shadow-default: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 12px 17px -3px rgba(0, 0, 0, 0.1),
+        0 6px 8px -2px rgba(0, 0, 0, 0.05);
 }
 
 body {
-    background-color: #ffffff;
+    background-color: var(--white);
     margin: 0;
 }
 
+/* Header */
 header {
     padding: 1rem;
-    color: #e974ae;
-    background-color: #4a4e51;
-
-    p {
-        font-size: 1.5rem;
-        text-align: center;
-
-        b {
-            vertical-align: top;
-            cursor: pointer;
-        }
-    }
+    color: var(--primary-color);
+    background-color: var(--bg-color);
 }
 
+header p {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+header p b {
+    vertical-align: top;
+    cursor: pointer;
+}
+
+/* Main */
 main {
     margin: 4rem 0;
     display: flex;
@@ -36,24 +45,21 @@ main {
 button {
     border: none;
     border-radius: 1rem;
-    background: #4a4e51;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background: var(--bg-color);
+    box-shadow: var(--shadow-default);
     padding: 4rem;
     cursor: pointer;
     transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
 
-    &:hover {
-        transform: translateY(-0.1em);
-        box-shadow: 0 12px 17px -3px rgba(0, 0, 0, 0.1),
-            0 6px 8px -2px rgba(0, 0, 0, 0.05);
-    }
+button:hover {
+    transform: translateY(-0.1em);
+    box-shadow: var(--shadow-hover);
+}
 
-    &:active {
-        transform: translateY(0);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-            0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
+button:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-default);
 }
 
 svg {
@@ -72,47 +78,48 @@ svg {
 
 .counter {
     padding: 1rem;
-    background-color: #4a4e51;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background-color: var(--bg-color);
+    box-shadow: var(--shadow-default);
     min-width: 8rem;
     height: 8rem;
     border-radius: 1rem;
     display: flex;
     flex-direction: column;
-
-    #streak {
-        text-align: left;
-        color: #ffffff;
-        font-weight: 600;
-    }
-
-    .hits p {
-        margin: 0;
-        color: #ffffff;
-        font-size: 2.25rem;
-        line-height: 2.5rem;
-        font-weight: 700;
-        text-align: center;
-    }
 }
 
+.counter #streak {
+    text-align: left;
+    color: var(--white);
+    font-weight: 600;
+}
+
+.counter .hits p {
+    margin: 0;
+    color: var(--white);
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Footer */
 footer {
     padding: 1rem;
-    color: #e974ae;
-    background-color: #4a4e51;
-
-    p {
-        text-align: center;
-
-        a {
-            color: #e974ae;
-            text-decoration: none;
-            font-weight: bold;
-        }
-    }
+    color: var(--primary-color);
+    background-color: var(--bg-color);
 }
 
+footer p {
+    text-align: center;
+}
+
+footer p a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Media queries */
 @media (max-width: 1600px) {
     button {
         padding: 3rem;
@@ -194,27 +201,20 @@ footer {
         padding: 0.5rem;
         min-width: 4rem;
         height: auto;
+    }
 
-        #streak {
-            text-align: center;
-            margin: 0;
-            font-size: 0.8rem;
-        }
+    .counter #streak {
+        text-align: center;
+        margin: 0;
+        font-size: 0.8rem;
+    }
 
-        .hits p {
-            font-size: 1rem;
-        }
+    .counter .hits p {
+        font-size: 1rem;
     }
 }
 
-@media (max-width: 400px) {
-    main {
-        flex-direction: column;
-        gap: 2rem;
-    }
-}
-
-@media (orientation: portrait) {
+@media (max-width: 400px), (orientation: portrait) {
     main {
         flex-direction: column;
         gap: 2rem;
