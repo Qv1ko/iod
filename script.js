@@ -552,8 +552,12 @@ function handleResize() {
     });
 }
 
-function shuffleText() {
-    TEXT.innerHTML = getRandElement(TEXT_LIST).replace(
+async function shuffleText() {
+    const RESPONSE = await fetch("./texts.json");
+    const DATA = await RESPONSE.json();
+
+    // TEXT.innerHTML = getRandElement(TEXT_LIST).replace(
+    TEXT.innerHTML = getRandElement(DATA.texts).replace(
         /{direction}/g,
         `<b id="direction">${getRandElement(DIRECTIONS)}</b>`
     );
