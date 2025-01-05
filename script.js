@@ -1,72 +1,81 @@
+// Global variables
 const TEXT = document.getElementById("text");
 const STREAK = document.getElementById("streak");
 const COUNTER = document.getElementById("hits");
-let streak = localStorage.getItem("streak")
-    ? parseInt(localStorage.getItem("streak"))
-    : 0;
-STREAK.textContent = streak + "🔥";
+
+let streak = parseInt(localStorage.getItem("streak")) || 0;
 let counter = 0;
 
-window.addEventListener("resize", resizeCheck);
+// Events
+window.addEventListener("resize", handleResize);
 document.addEventListener("DOMContentLoaded", () => {
-    resizeCheck();
-    shuffle();
+    handleResize();
+    shuffleText();
+    updateStreakText();
 });
 document.addEventListener("click", clickEvent);
 
-function resizeCheck() {
+// Primary functions
+function handleResize() {
+    const IS_SMALL_SCREEN =
+        window.innerWidth < 400 || window.innerWidth < window.innerHeight;
     document.querySelectorAll(".default_icon").forEach((icon) => {
-        if (window.innerWidth < 400 || window.innerWidth < window.innerHeight) {
-            icon.setAttribute("fill", "#e974ae");
-            if (icon.parentElement.id === "left") {
-                icon.innerHTML =
-                    '<path d="M48 256a208 208 0 1 1 416 0A208 208 0 1 1 48 256zm464 0A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM217.4 376.9c4.2 4.5 10.1 7.1 16.3 7.1c12.3 0 22.3-10 22.3-22.3l0-57.7 96 0c17.7 0 32-14.3 32-32l0-32c0-17.7-14.3-32-32-32l-96 0 0-57.7c0-12.3-10-22.3-22.3-22.3c-6.2 0-12.1 2.6-16.3 7.1L117.5 242.2c-3.5 3.8-5.5 8.7-5.5 13.8s2 10.1 5.5 13.8l99.9 107.1z"/>';
-            } else if (icon.parentElement.id === "right") {
-                icon.innerHTML =
-                    '<path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM294.6 151.2c-4.2-4.6-10.1-7.2-16.4-7.2C266 144 256 154 256 166.3l0 41.7-96 0c-17.7 0-32 14.3-32 32l0 32c0 17.7 14.3 32 32 32l96 0 0 41.7c0 12.3 10 22.3 22.3 22.3c6.2 0 12.1-2.6 16.4-7.2l84-91c3.5-3.8 5.4-8.7 5.4-13.9s-1.9-10.1-5.4-13.9l-84-91z"/>';
-            }
+        const PARENT_ID = icon.parentElement.id;
+
+        if (IS_SMALL_SCREEN) {
+            icon.innerHTML =
+                PARENT_ID === "left"
+                    ? '<path d="M48 256a208 208 0 1 1 416 0A208 208 0 1 1 48 256zm464 0A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM217.4 376.9c4.2 4.5 10.1 7.1 16.3 7.1c12.3 0 22.3-10 22.3-22.3l0-57.7 96 0c17.7 0 32-14.3 32-32l0-32c0-17.7-14.3-32-32-32l-96 0 0-57.7c0-12.3-10-22.3-22.3-22.3c-6.2 0-12.1 2.6-16.3 7.1L117.5 242.2c-3.5 3.8-5.5 8.7-5.5 13.8s2 10.1 5.5 13.8l99.9 107.1z"/>'
+                    : PARENT_ID === "right"
+                    ? '<path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM294.6 151.2c-4.2-4.6-10.1-7.2-16.4-7.2C266 144 256 154 256 166.3l0 41.7-96 0c-17.7 0-32 14.3-32 32l0 32c0 17.7 14.3 32 32 32l96 0 0 41.7c0 12.3 10 22.3 22.3 22.3c6.2 0 12.1-2.6 16.4-7.2l84-91c3.5-3.8 5.4-8.7 5.4-13.9s-1.9-10.1-5.4-13.9l-84-91z"/>'
+                    : "";
         } else {
             icon.innerHTML = "";
         }
+
+        icon.setAttribute("fill", IS_SMALL_SCREEN ? "#e974ae" : "");
     });
 }
 
-function clickEvent(e) {
-    let btn = e.target.closest("button");
-    let direction = e.target.closest("b");
+async function shuffleText() {
+    const RESPONSE = await fetch("./texts.json");
+    const DATA = await RESPONSE.json();
+    const DIRECTIONS = ["izquierda", "derecha"];
 
-    if (btn && btn.id) {
-        play(btn);
-    } else if (direction && direction.id === "direction") {
-        hint(direction);
+    TEXT.innerHTML = getRandElement(DATA.texts).replace(
+        /{direction}/g,
+        `<b id="direction">${getRandElement(DIRECTIONS)}</b>`
+    );
+}
+
+function updateStreakText() {
+    STREAK.textContent = `${streak}🔥`;
+}
+
+function clickEvent(e) {
+    const BTN = e.target.closest("button");
+    const DIRECTION = e.target.closest("b");
+
+    if (BTN?.id) {
+        checkAnswer(BTN);
+    } else if (DIRECTION?.id === "direction") {
+        hint(DIRECTION);
     }
 }
 
-function play(btn) {
-    let content = TEXT.textContent.toLowerCase();
-    let defaultIcon = document.querySelector("#" + btn.id + " .default_icon");
-    let correctIcon = document.querySelector("#" + btn.id + " .correct_icon");
-    let wrongIcon = document.querySelector("#" + btn.id + " .wrong_icon");
+// Secondary functions
+function checkAnswer(button) {
+    const content = TEXT.textContent.toLowerCase();
+    const ICONS = getIcons(button.id);
 
     document.removeEventListener("click", clickEvent);
 
-    if (
-        ((content.includes("izquierda") || content.includes("👈")) &&
-            btn.id.includes("left")) ||
-        ((content.includes("derecha") || content.includes("👉")) &&
-            btn.id.includes("right"))
-    ) {
-        COUNTER.textContent = intToRoman(++counter);
-
-        correctIcon.style.display = "block";
-        defaultIcon.style.display = "none";
+    if (isCorrectAnswer(button.id, content)) {
+        updateCounter(++counter);
+        showIcon(ICONS.correct, ICONS.default);
     } else {
-        STREAK.textContent = streak + "🔥";
-        counter = 0;
-        COUNTER.textContent = intToRoman(counter);
-
-        wrongIcon.style.display = "block";
-        defaultIcon.style.display = "none";
+        resetCounter();
+        showIcon(ICONS.wrong, ICONS.default);
     }
 
     if (counter > streak) {
@@ -75,36 +84,59 @@ function play(btn) {
     }
 
     setTimeout(() => {
-        defaultIcon.style.display = "block";
-        correctIcon.style.display = "none";
-        wrongIcon.style.display = "none";
-        shuffle();
+        resetIcons(ICONS);
+        shuffleText();
         document.addEventListener("click", clickEvent);
     }, 800);
 }
 
 function hint(direction) {
-    direction.textContent =
-        direction.textContent === "izquierda"
-            ? "👈"
-            : direction.textContent === "derecha"
-            ? "👉"
-            : direction.textContent;
+    direction.textContent = direction.textContent === "izquierda" ? "👈" : "👉";
     direction.style.fontSize = "1.1rem";
     direction.style.cursor = "default";
 }
 
-async function shuffle() {
-    const RESPONSE = await fetch("./texts.json");
-    const DATA = await RESPONSE.json();
-    const DIRECTION = ["izquierda", "derecha"];
-    let direction = DIRECTION[Math.floor(Math.random() * DIRECTION.length)];
+// Other functions
+function getRandElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
 
-    TEXT.innerHTML = DATA.texts[
-        Math.floor(Math.random() * DATA.texts.length)
-    ].replace(/{direction}/g, "<b id='direction'>" + direction + "</b>");
+function getIcons(btnId) {
+    return {
+        default: document.querySelector(`#${btnId} .default_icon`),
+        correct: document.querySelector(`#${btnId} .correct_icon`),
+        wrong: document.querySelector(`#${btnId} .wrong_icon`),
+    };
+}
 
-    document.getElementsByClassName("correct_icons");
+function isCorrectAnswer(btnId, content) {
+    const IS_LEFT = content.includes("izquierda") || content.includes("👈");
+    const IS_RIGHT = content.includes("derecha") || content.includes("👉");
+    return (
+        (IS_LEFT && btnId.includes("left")) ||
+        (IS_RIGHT && btnId.includes("right"))
+    );
+}
+
+function updateCounter(value) {
+    COUNTER.textContent = intToRoman(value);
+}
+
+function resetCounter() {
+    counter = 0;
+    updateCounter(counter);
+    updateStreakText();
+}
+
+function showIcon(iconToShow, iconToHide) {
+    iconToShow.style.display = "block";
+    iconToHide.style.display = "none";
+}
+
+function resetIcons(icons) {
+    icons.default.style.display = "block";
+    icons.correct.style.display = "none";
+    icons.wrong.style.display = "none";
 }
 
 function intToRoman(number) {
@@ -112,23 +144,8 @@ function intToRoman(number) {
         return "-";
     }
 
-    const VALUES = [
-        1000000, 900000, 500000, 400000, 100000, 90000, 50000, 40000, 10000,
-        9000, 5000, 4000, 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1,
-    ];
+    const VALUES = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
     const SYMBOLS = [
-        "M̅",
-        "C̅M̅",
-        "D̅",
-        "C̅D̅",
-        "C̅",
-        "X̅C̅",
-        "L̅",
-        "X̅L̅",
-        "X̅",
-        "I̅X̅",
-        "V̅",
-        "I̅V̅",
         "M",
         "CM",
         "D",
@@ -144,13 +161,11 @@ function intToRoman(number) {
         "I",
     ];
 
-    let roman = "";
-    for (let i = 0; i < VALUES.length; i++) {
-        while (number >= VALUES[i]) {
+    return VALUES.reduce((roman, value, i) => {
+        while (number >= value) {
             roman += SYMBOLS[i];
-            number -= VALUES[i];
+            number -= value;
         }
-    }
-
-    return roman;
+        return roman;
+    }, "");
 }
