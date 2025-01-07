@@ -88,7 +88,12 @@ function checkAnswer(button) {
 }
 
 function hint(direction) {
-    direction.textContent = direction.textContent === "izquierda" ? "👈" : "👉";
+    direction.textContent =
+        direction.textContent === "izquierda"
+            ? "👈"
+            : direction.textContent === "derecha"
+            ? "👉"
+            : direction.textContent;
     direction.style.fontSize = "1.1rem";
     direction.style.cursor = "default";
 }
