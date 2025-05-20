@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStreakText();
 });
 document.addEventListener("click", clickEvent);
+document.addEventListener("keydown", keyEvent);
 
 // Primary functions
 function handleResize() {
@@ -60,12 +61,21 @@ function clickEvent(e) {
     }
 }
 
+function keyEvent(e) {
+    if (e.key === "ArrowLeft") {
+        checkAnswer(document.getElementById("left"));
+    } else if (e.key === "ArrowRight") {
+        checkAnswer(document.getElementById("right"));
+    }
+}
+
 // Secondary functions
 function checkAnswer(button) {
     const CONTENT = TEXT.textContent.toLowerCase();
     const ICONS = getIcons(button.id);
 
     document.removeEventListener("click", clickEvent);
+    document.removeEventListener("keydown", keyEvent);
 
     if (isCorrectAnswer(button.id, CONTENT)) {
         updateCounter(++counter);
@@ -84,6 +94,7 @@ function checkAnswer(button) {
         resetIcons(ICONS);
         shuffleText();
         document.addEventListener("click", clickEvent);
+        document.addEventListener("keydown", keyEvent);
     }, 800);
 }
 
